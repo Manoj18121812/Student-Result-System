@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Student Result List</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <style>
+    body {
+        background: url(https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&w=1950&q=80
+) no-repeat center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+    }
+
+    .main-card {
+        background: rgba(255, 255, 255, 0.9); /* Slight white transparency for better readability */
+        border-radius: 20px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        padding: 40px;
+        margin-top: 30px;
+    }
+
+    .table thead {
+        background: linear-gradient(to right, #007bff, #00c6ff);
+        color: white;
+    }
+
+    .btn-3d {
+        box-shadow: 0 5px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-3d:active {
+        transform: translateY(2px);
+        box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f2f9ff;
+    }
+
+    .navbar-brand {
+        font-weight: bold;
+    }
+
+    .search-bar input {
+        border-radius: 10px;
+    }
+
+    nav.navbar {
+        background: rgba(255, 255, 255, 0.8); /* Semi-transparent navbar */
+    }
+</style>
+
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm rounded-3 mt-3 mx-3 px-3" style="backdrop-filter: blur(10px);">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold text-primary" href="/">📘 ResultApp</a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-between" id="mainNavbar">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-2">
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="/add"><i class="fas fa-user-plus me-1"></i> Add Student</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="/export/pdf"><i class="fas fa-file-pdf me-1 text-danger"></i> Export PDF</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="/send-all-emails"><i class="fas fa-paper-plane me-1 text-info"></i> Send All Emails</a>
+        </li>
+      </ul>
+
+      <form class="d-flex me-3" method="get" action="/">
+        <input class="form-control form-control-sm me-2 rounded-pill" type="search" name="keyword" th:value="${keyword}" placeholder="Search..." aria-label="Search">
+        <button class="btn btn-outline-primary btn-sm rounded-pill me-2" type="submit">Search</button>
+        <a class="btn btn-outline-secondary btn-sm rounded-pill" href="/">🔄 Reset</a>
+      </form>
+
+      <a href="/logout" class="btn btn-outline-danger btn-sm rounded-pill"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+    </div>
+  </div>
+</nav>
+
+
+
+<!-- ✅ Main Card -->
+<div class="container">
+    <div class="main-card">
+        <h2 class="text-center mb-4">📚 Student Result List</h2>
+
+        <!-- Flash messages -->
+        <div th:if="${msg}" class="alert alert-success text-center" th:text="${msg}"></div>
+        <div th:if="${error}" class="alert alert-danger text-center" th:text="${error}"></div>
+
+        <!-- 🔍 Search -->
+        <form class="row mb-4 search-bar" method="get" action="/">
+            
+            
+        </form>
+
+        <!-- 🧾 Student Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover text-center align-middle">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Roll Number</th>
+                        <th>Total Marks</th>
+                        <th>Grade</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="s : ${students}">
+                        <td th:text="${s.name}"></td>
+                        <td th:text="${s.rollNumber}"></td>
+                        <td th:text="${s.totalMarks}"></td>
+                        <td th:text="${s.grade}"></td>
+                        <td>
+                            <a th:href="@{/edit/{id}(id=${s.id})}" class="btn btn-sm btn-warning btn-3d">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a th:href="@{/delete/{id}(id=${s.id})}" class="btn btn-sm btn-danger btn-3d"
+                               onclick="return confirm('Are you sure you want to delete this student?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                            <a th:href="@{/send-email/{id}(id=${s.id})}" class="btn btn-sm btn-info btn-3d">
+                                <i class="fas fa-paper-plane"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
