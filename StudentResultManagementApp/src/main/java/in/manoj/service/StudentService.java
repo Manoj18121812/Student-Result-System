@@ -37,7 +37,9 @@ public class StudentService {
             student.setMathMarks(s.getMathMarks());
             student.setScienceMarks(s.getScienceMarks());
             student.setEnglishMarks(s.getEnglishMarks());
+            student.setEmail(s.getEmail());
             int total = student.getMathMarks() + student.getScienceMarks() + student.getEnglishMarks();
+            
             student.setTotalMarks(total);
             student.setGrade(calculateGrade(total));
             return repo.save(student);
