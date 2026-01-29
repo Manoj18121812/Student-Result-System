@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    triggers {
+        githubPush()
+    }
+
+    stages {
+        stage('Clone Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Manoj18121812/Student-Result-System.git'
+            }
+        }
+
+        stage('Build Maven') {
+            steps {
+                sh '''
+                cd StudentResultManagementApp
+                chmod +x mvnw
+                ./mvnw clean package
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                cd StudentResultManagementApp
+                docker build -t student-result-app .
+                '''
+            }
+        }
+
+        stage('Deploy App + DB') {
+            steps {
+                sh '''
+                cd StudentResultManagementApp
+                docker-compose down || true
+                docker-compose up -d --build
+                '''
+            }
+        }
+    }
+}
